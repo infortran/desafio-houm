@@ -1,0 +1,22 @@
+.header{
+    text-align:center;
+}
+
+.svgRickMorty{
+    margin:50px 0
+}
+
+@media(min-width:40em){
+    .searchContainer{
+        width:60%;
+        margin:0 auto
+    }
+    .svgRickMorty{
+        width:400px;
+    }
+    .svgRickMorty{
+        margin:50px 0
+    }
+}
+
+

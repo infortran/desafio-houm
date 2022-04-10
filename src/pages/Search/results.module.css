@@ -1,0 +1,55 @@
+.resultsContainer{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap:8px;
+}
+
+.heroCard{
+    box-shadow:0 3px 10px rgba(0,0,0,.3);
+    border-radius: 10px;
+    background:var(--white);
+    overflow:hidden;
+    position:relative;
+}
+
+.heroCard img{
+    width:100%;
+}
+
+.cardBody{
+    padding:8px;
+}
+.cardBody h3, .cardBody p{
+    padding:8px 0;
+}
+.cardBody p{
+    color:var(--text-light)
+}
+
+.badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+}
+.badge span{
+    display:block;
+    padding:4px 8px;
+    border-radius: 20px;
+    color:white;
+}
+.Alive{
+    background: var(--dark-pink);
+}
+
+.Dead{
+    background: var(--pink);
+    color:var(--red) !important;
+}
+
+
+@media(min-width:40em){
+    .resultsContainer{
+        grid-template-columns: repeat(5, 1fr);
+        grid-gap:20px;
+    }
+}

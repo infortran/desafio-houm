@@ -3,7 +3,7 @@ import Footer from '../../components/Footer'
 import Navbar from '../../components/Navbar'
 import Page from './Page'
 
-const Home = () => {
+const Search = () => {
     return (
         <>
             <header>
@@ -20,4 +20,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default Search

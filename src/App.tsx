@@ -1,19 +1,21 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Navbar from './components/Navbar';
 import Home from './pages/Home'
+import { Provider } from 'react-redux';
+import store from './store'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Search from './pages/Search';
 
 function App() {
-
-
-
-
-  return (
-    <div className="App">
-      
-    </div>
-  );
+	return (
+		<Provider store={store}>
+			<BrowserRouter>
+				<Routes>
+					<Route path="/" element={<Home />} />
+					<Route path="/search" element={<Search />} />
+				</Routes>
+			</BrowserRouter>
+		</Provider>
+	);
 }
 
 export default App;

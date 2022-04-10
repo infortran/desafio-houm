@@ -1,0 +1,79 @@
+.searchBar{
+    margin:0 auto;
+}
+.inputGroup{
+    position: relative;
+    width:100%
+}
+.inputGroup i{
+    position:absolute;
+    top:25%;
+    right:4%;
+    cursor:pointer;
+}
+.searchBar input{
+    padding:10px 15px;
+    border-radius: 50px;
+    border:1px solid var(--gray);
+    width:100%;
+    
+}
+.searchBar button{
+    background:var(--red);
+    border:none;
+    border-radius: 50px;
+    padding:10px 15px;
+    color:var(--white);
+    display:flex;
+    align-items: center;
+    font-size:19.2px;
+    cursor:pointer;
+    margin-left:10px;
+}
+.searchBar i{
+    font-size:16px;
+    margin-right:10px;
+}
+.tabNavigation{
+    box-shadow:0 3px 10px rgba(0,0,0,.1);
+    border-radius:20px;
+    display:grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    max-width:400px;
+    margin:20px auto;
+    align-items: center;
+    background:var(--white);
+}
+.tabLink{
+    padding:12px;
+    text-align: center;
+    color:var(--dark)
+}
+.tabActive{
+    background:var(--dark);
+    color:var(--white);
+    border-radius: 20px;
+    padding:10px 20px;
+}
+
+@media(min-width:40em){
+    .inputGroup i{
+        font-size:22px;
+        right:2%;
+    }
+    .searchBar{
+        display:flex;
+    }
+    .searchBar input{
+        font-size:19.2px;
+        padding:15px 15px;
+    }
+}
+
+@media(max-width:40em){
+    .searchBar button{
+        width:100%;
+        justify-content: center;
+        margin:20px 0;
+    }
+}

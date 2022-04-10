@@ -1,0 +1,29 @@
+
+
+.svgRickMorty{
+    margin:20px;
+}
+
+
+
+@media(min-width:40em){
+    .svgRickMorty{
+        width:200px;
+        align-self: flex-start;
+        margin:20px 0 0 0;
+    }
+    .header{
+        display:flex;
+        align-items: center;
+    }
+    .logoContainer{
+        width:20%;
+        display:flex;
+        height:80px;
+        align-self:flex-start
+    }
+    .searchBarContainer{
+        width:80%;
+        padding:20px 0
+    }
+}
