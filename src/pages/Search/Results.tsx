@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import styles from './results.module.css'
-import { Character, Result } from '../../interfaces/Character'
-import useSearch from '../../Hooks/useSearch'
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
-import { getCharactersByName } from '../../store/Slices/searchSlice'
+import { Result } from '../../interfaces/Character'
+import { RootStateOrAny, useSelector } from 'react-redux'
 
 const Results = () => {
     const [list, setList] = useState<Result[]>([])
    // const {results} = useSelector((state:RootStateOrAny) => state.characters)
     const { entities } = useSelector((state:RootStateOrAny) => state.search)
-    const dispatch = useDispatch()
-    
-    useEffect(()=> {
-        dispatch(getCharactersByName({page:'1', name:'sanchez'}))
-    }, [])
+    useEffect(() => {
+        setList([])
+        setList(entities)
+    }, [entities])
 
     return (
         <section className={styles.resultsContainer}>
             {
-                entities.map((e: Result) => (
-                    <article key={e.name} className={styles.heroCard}>
+                list.map((e: Result, i) => (
+                    <article key={`${e.name}-${i}`} className={styles.heroCard}>
                         <header className={styles.cardHeader}>
                             <img src={e.image} alt="" />
                             <div className={`${styles.badge}`}>
@@ -36,6 +33,8 @@ const Results = () => {
                     </article>
                 ))
             }
+
+            
 
             {/* <article className={styles.heroCard}>
                 <header className={styles.cardHeader}>

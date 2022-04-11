@@ -1,5 +1,5 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios, { Axios, AxiosError } from 'axios'
+import { createAsyncThunk, createSlice, SerializedError } from '@reduxjs/toolkit'
+import axios from 'axios'
 import { Character, Result } from '../../interfaces/Character'
 
 interface CharByName {
@@ -9,7 +9,9 @@ interface CharByName {
 
 interface charState {
     entities?: Result[],
-    loading: 'idle' | 'pending' | 'succeeded' | 'failed'
+    loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+    currentReqId: undefined | string,
+    error: null | SerializedError
 }
 
 export const getAllCharacters = createAsyncThunk(
@@ -43,7 +45,9 @@ export const getCharactersByName = createAsyncThunk(
 
 const initialState = {
     entities: [],
-    loading: 'idle'
+    loading: 'idle',
+    currentReqId: undefined,
+    error: null
 } as charState
 
 const searchSlice = createSlice({
@@ -58,8 +62,26 @@ const searchSlice = createSlice({
         // }
     },
     extraReducers:(builder) => {
-        builder.addCase(getCharactersByName.fulfilled, (state, action) => {
-            state.entities = action.payload
+        builder
+        .addCase(getCharactersByName.pending, (state, action) => {
+            if(state.loading === 'idle'){
+                state.loading = 'pending'
+                state.currentReqId = action.meta.requestId
+            }
+        })
+        .addCase(getCharactersByName.fulfilled, (state, action) => {
+            if(state.loading === 'pending' && state.currentReqId === action.meta.requestId){
+                state.loading = 'idle'
+                state.entities = action.payload
+                state.currentReqId = undefined
+            }
+        })
+        .addCase(getCharactersByName.rejected, (state, action) => {
+            if(state.loading === 'pending' && state.currentReqId === action.meta.requestId){
+                state.loading = 'idle'
+                state.error = action.error
+                state.currentReqId = undefined
+            }
         })
     }
 })

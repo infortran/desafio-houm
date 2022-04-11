@@ -50,7 +50,7 @@
     color:var(--dark)
 }
 .tabActive{
-    background:var(--dark);
+    background:var(--red);
     color:var(--white);
     border-radius: 20px;
     padding:10px 20px;

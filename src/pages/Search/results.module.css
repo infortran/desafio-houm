@@ -44,8 +44,11 @@
 .Dead{
     background: var(--pink);
     color:var(--red) !important;
+    text-decoration: line-through;
 }
-
+.unknown{
+    background: linear-gradient(to bottom, black, rgb(78, 0, 114), black);
+}
 
 @media(min-width:40em){
     .resultsContainer{

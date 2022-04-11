@@ -8,6 +8,7 @@
 
 .logoContainer{
     text-align:center;
+    cursor:pointer;
 }
 .logoContainer p{
     font-size:12px

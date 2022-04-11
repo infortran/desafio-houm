@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styles from './styles.module.css'
-import { useNavigate } from 'react-router-dom'
-import useSearch from '../../Hooks/useSearch'
+//import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
-import { setCharacters } from '../../store/Slices/characterSlice'
+import { getCharactersByName } from '../../store/Slices/searchSlice'
 
 const SearchBar = () => {
-    const navigate = useNavigate()
+    //const navigate = useNavigate()
     const [query, setQuery] = useState('')
     const [page, setPage] = useState('')
     const [tabStatus, setTabStatus] = useState('Character')
@@ -18,6 +17,10 @@ const SearchBar = () => {
     //     dispatch(setCharacters({loading, results, error, hasMore}))
     // }, [results])
 
+    useEffect(()=> {
+        dispatch(getCharactersByName({page, name:query}))
+    }, [query])
+    
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.currentTarget.value)
         setPage('1') 
@@ -31,17 +34,17 @@ const SearchBar = () => {
                     <i className="fa fa-list"></i>
                 </div>
 
-                <button onClick={() => {
+                {/* <button onClick={() => {
                     
                 }}>
                     <i className="fa fa-search"></i>
                     <span>Search</span>
-                </button>
+                </button> */}
             </div>
             <div className={styles.tabNavigation}>
                 {
-                    placeholder.map(tab => (
-                        <div className={`${styles.tabLink} ${tabStatus === tab && styles.tabActive}`}
+                    placeholder.map((tab, i) => (
+                        <div key={i} className={`${styles.tabLink} ${tabStatus === tab && styles.tabActive}`}
                             onClick={(e) => { setTabStatus(e.currentTarget.innerHTML) }}
                         >{tab}</div>
                     ))
