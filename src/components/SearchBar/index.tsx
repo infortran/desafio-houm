@@ -3,11 +3,12 @@ import styles from './styles.module.css'
 //import { useNavigate } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { getCharactersByName } from '../../store/Slices/searchSlice'
+import { setParams } from '../../store/Slices/paramsSlice'
 
 const SearchBar = () => {
     //const navigate = useNavigate()
     const [query, setQuery] = useState('')
-    const [page, setPage] = useState('')
+    const [page, setPage] = useState(1)
     const [tabStatus, setTabStatus] = useState('Character')
     const placeholder = ['Character', 'Episode', 'Location']
     const dispatch = useDispatch()
@@ -19,11 +20,12 @@ const SearchBar = () => {
 
     useEffect(()=> {
         dispatch(getCharactersByName({page, name:query}))
-    }, [query])
+        dispatch(setParams({ page, query })) 
+    }, [query, page])
     
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setQuery(e.currentTarget.value)
-        setPage('1') 
+        setPage(1)
     }
 
     return (
@@ -33,13 +35,6 @@ const SearchBar = () => {
                     <input value={query} type="text" placeholder="Search a Character..." onChange={handleSearch} />
                     <i className="fa fa-list"></i>
                 </div>
-
-                {/* <button onClick={() => {
-                    
-                }}>
-                    <i className="fa fa-search"></i>
-                    <span>Search</span>
-                </button> */}
             </div>
             <div className={styles.tabNavigation}>
                 {
@@ -49,14 +44,8 @@ const SearchBar = () => {
                         >{tab}</div>
                     ))
                 }
-
-                {/* <div className={`${styles.tabLink} ${tab === 'episodes' && styles.tabActive}`}
-                    onClick={() => { setTab('episodes') }}
-                >Episodes</div>
-                <div className={`${styles.tabLink} ${tab === 'locations' && styles.tabActive}`}
-                    onClick={() => { setTab('locations') }}
-                >Locations</div> */}
             </div>
+            
         </>
     )
 }

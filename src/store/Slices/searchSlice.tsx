@@ -3,12 +3,13 @@ import axios from 'axios'
 import { Character, Result } from '../../interfaces/Character'
 
 interface CharByName {
-    page: string,
+    page: number,
     name: string
 }
 
 interface charState {
     entities?: Result[],
+    pages?:number | undefined,
     loading: 'idle' | 'pending' | 'succeeded' | 'failed',
     currentReqId: undefined | string,
     error: null | SerializedError
@@ -33,7 +34,7 @@ export const getCharactersByName = createAsyncThunk(
         const { page, name } = data
         try{
             const response = await axios.get<Character>('https://rickandmortyapi.com/api/character',{ params: { page , name }})
-            return response.data.results
+            return { results: response.data.results, pages: response.data.info.pages }
         }catch(err){
             if(axios.isAxiosError(err)){
                 return rejectWithValue(err.response?.data)
@@ -45,6 +46,7 @@ export const getCharactersByName = createAsyncThunk(
 
 const initialState = {
     entities: [],
+    pages:0,
     loading: 'idle',
     currentReqId: undefined,
     error: null
@@ -53,14 +55,7 @@ const initialState = {
 const searchSlice = createSlice({
     name:'search',
     initialState,
-    reducers:{
-        // setQuery: (state, {payload}) => {
-        //     state.query = payload
-        // },
-        // setPage: (state, {payload}) => {
-        //     state.page = payload
-        // }
-    },
+    reducers:{},
     extraReducers:(builder) => {
         builder
         .addCase(getCharactersByName.pending, (state, action) => {
@@ -70,9 +65,10 @@ const searchSlice = createSlice({
             }
         })
         .addCase(getCharactersByName.fulfilled, (state, action) => {
-            if(state.loading === 'pending' && state.currentReqId === action.meta.requestId){
+            if(state.loading === 'pending' && state.currentReqId === action.meta.requestId){ 
                 state.loading = 'idle'
-                state.entities = action.payload
+                state.entities = action.payload?.results
+                state.pages = action.payload?.pages
                 state.currentReqId = undefined
             }
         })
@@ -86,6 +82,5 @@ const searchSlice = createSlice({
     }
 })
 
-//export const { setQuery, setPage } = searchSlice.actions
 
 export default searchSlice.reducer

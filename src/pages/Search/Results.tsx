@@ -1,59 +1,66 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './results.module.css'
 import { Result } from '../../interfaces/Character'
-import { RootStateOrAny, useSelector } from 'react-redux'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { getCharactersByName } from '../../store/Slices/searchSlice'
+import { setParams } from '../../store/Slices/paramsSlice'
 
 const Results = () => {
     const [list, setList] = useState<Result[]>([])
-   // const {results} = useSelector((state:RootStateOrAny) => state.characters)
-    const { entities } = useSelector((state:RootStateOrAny) => state.search)
+    const { entities, pages } = useSelector((state: RootStateOrAny) => state.search)
+    const { data } = useSelector((state: RootStateOrAny) => state.params)
+
+    const dispatch = useDispatch()
+
     useEffect(() => {
-        setList([])
-        setList(entities)
+        if(data.page === 1){
+            setList([])
+        }
+        if(data.page > 1){
+            setList(prev => {
+                return [...prev, ...entities]
+            })
+        }else{
+            setList(entities)
+        }
     }, [entities])
 
+    const handleNextPage = () => {
+        let newPage = data.page + 1
+        dispatch(getCharactersByName({name: data.query, page:newPage}))
+        dispatch(setParams({query:data.query, page:newPage}))
+    }
+
     return (
-        <section className={styles.resultsContainer}>
-            {
-                list.map((e: Result, i) => (
-                    <article key={`${e.name}-${i}`} className={styles.heroCard}>
-                        <header className={styles.cardHeader}>
-                            <img src={e.image} alt="" />
-                            <div className={`${styles.badge}`}>
-                                <span className={`${styles[e.status]}`}>{e.status}</span>
-                            </div>
-                        </header>
-                        <section className={styles.cardBody}>
-                            <div>
-                                <h3>{e.name}</h3>
-                                <p>{e.species}</p>
-                            </div>
+        <>
+            <section className={styles.resultsContainer}>
+                {
+                    list.map((e: Result, i) => (
+                        <article key={`${e.name}-${i}`} className={styles.heroCard}>
+                            <header className={styles.cardHeader}>
+                                <img src={e.image} alt="" />
+                                <div className={`${styles.badge}`}>
+                                    <span className={`${styles[e.status]}`}>{e.status}</span>
+                                </div>
+                            </header>
+                            <section className={styles.cardBody}>
+                                <div>
+                                    <h3>{e.name}</h3>
+                                    <p>{e.species}</p>
+                                </div>
 
-                        </section>
-                    </article>
-                ))
-            }
+                            </section>
+                        </article>
+                    ))
+                }
+            </section>
+            <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
+                <button className="btn-primary"
+                    onClick={handleNextPage}
+                >Cargar mas</button>
+            </div>
+        </>
 
-            
-
-            {/* <article className={styles.heroCard}>
-                <header className={styles.cardHeader}>
-                    <img src="https://via.placeholder.com/300x300" alt=""/>
-                    <div className={`${styles.badge}`}>
-                        <span className={`${styles.dead}`}>Status</span>
-                    </div>
-                </header>
-                <section className={styles.cardBody}>
-                    <div>
-                        <h3>Name</h3>
-                        <p>Species</p>
-                    </div>
-                    
-                </section>
-            </article> */}
-            {/* <div>{loading && 'Loading...'}</div>
-            <div>{error && 'Error'}</div> */}
-        </section>
     )
 }
 

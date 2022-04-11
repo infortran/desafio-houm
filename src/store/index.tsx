@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
-import characters from './Slices/characterSlice'
+import { useDispatch } from 'react-redux'
+import params from './Slices/paramsSlice'
 import search from './Slices/searchSlice'
 
-export default configureStore({
+export const store = configureStore({
     reducer:{
-        characters,
+        params,
         search
     }
 })
+
+export type AppDispatch = typeof store.dispatch
+export const useAppDispatch = () => useDispatch<AppDispatch>() 
