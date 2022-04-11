@@ -1,5 +1,4 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { ReactComponent as HoumLogo } from '../../assets/images/houm_logo.svg'
 import styles from './styles.module.css'
 

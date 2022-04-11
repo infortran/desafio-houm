@@ -1,22 +1,25 @@
-import React, { useEffect } from 'react'
-import { getCharacters } from '../../store/Slices/characterSlice'
-import { useDispatch, useSelector, RootStateOrAny } from 'react-redux'
+import React, { useState, useEffect } from 'react'
 import styles from './results.module.css'
+import { Character, Result } from '../../interfaces/Character'
+import useSearch from '../../Hooks/useSearch'
+import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { getCharactersByName } from '../../store/Slices/searchSlice'
 
 const Results = () => {
-    //const [list, setList] = useState([])
+    const [list, setList] = useState<Result[]>([])
+   // const {results} = useSelector((state:RootStateOrAny) => state.characters)
+    const { entities } = useSelector((state:RootStateOrAny) => state.search)
     const dispatch = useDispatch()
-    useEffect(() => {
-        dispatch(getCharacters())
+    
+    useEffect(()=> {
+        dispatch(getCharactersByName({page:'1', name:'sanchez'}))
     }, [])
-
-    const { list } = useSelector((state: RootStateOrAny) => state.characters)
 
     return (
         <section className={styles.resultsContainer}>
             {
-                list.map((e: any) => (
-                    <article className={styles.heroCard}>
+                entities.map((e: Result) => (
+                    <article key={e.name} className={styles.heroCard}>
                         <header className={styles.cardHeader}>
                             <img src={e.image} alt="" />
                             <div className={`${styles.badge}`}>
@@ -49,7 +52,8 @@ const Results = () => {
                     
                 </section>
             </article> */}
-
+            {/* <div>{loading && 'Loading...'}</div>
+            <div>{error && 'Error'}</div> */}
         </section>
     )
 }

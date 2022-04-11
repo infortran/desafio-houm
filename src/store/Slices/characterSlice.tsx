@@ -1,31 +1,22 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import axios from 'axios'
-
-
-export const getCharacters = createAsyncThunk(
-    'characters/getCharacters',
-    async ()=>{
-        const response = await axios.get('https://rickandmortyapi.com/api/character')
-        console.log(response)
-        return response.data.results
-    },
-)
 
 const characterSlice = createSlice({
-    name:'characters',
-    initialState:{
-        list:[],
-        status:''
+    name: 'characters',
+    initialState: {
+        data: {
+            loading: true,
+            results: [],
+            error: false,
+            hasMore: true
+        }
     },
-    reducers:{},
-    extraReducers:{
-        [getCharacters.fulfilled.toString()] : (state, {payload}) => {
-            state.list = payload
-            state.status = 'success'
+    reducers: {
+        setCharacters: (state, { payload }) => {
+            state.data = payload
         }
     }
 })
 
-
+export const { setCharacters } = characterSlice.actions
 
 export default characterSlice.reducer
