@@ -12,7 +12,9 @@ const Page = () => {
             <div className={styles.searchContainer}>
                 <SearchBar />
             </div>
-            
+            <div style={{
+                height:'180px'
+            }}></div>
             
         </section>
     )

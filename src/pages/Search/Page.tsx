@@ -1,22 +1,16 @@
 import React from 'react'
-import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
 import { ReactComponent as Logo } from '../../assets/images/rick_morty_logo.svg'
 import SearchBar from '../../components/SearchBar'
-import { getCharactersByName } from '../../store/Slices/searchSlice'
-import Results from './Results'
+import CharacterResults from './CharacterResults'
+import LocationResults from './LocationResults'
+import EpisodeResults from './EpisodeResults'
+
 import styles from './styles.module.css'
 
 const Page = () => {
-    const { data } = useSelector((state:RootStateOrAny) => state.params)
-    const dispatch = useDispatch()
+    const { pathname } = useLocation()
 
-    const handleNextPage = () => {
-        let actualPage = data.page
-        let actualQuery = data.query
-        actualPage = actualPage + 1
-        console.log('actuals', actualPage, actualQuery)
-        dispatch(getCharactersByName({page: actualPage, name:actualQuery}))
-    }
     return (
         <section>
             <header className={styles.header}>
@@ -28,7 +22,16 @@ const Page = () => {
                 </div>
             </header>
             <div>
-                <Results />
+                
+                {
+                    pathname === '/search-character' && <CharacterResults />
+                }
+                {
+                    pathname === '/search-location' && <LocationResults />
+                }
+                {
+                    pathname === '/search-episode' && <EpisodeResults />
+                }
             </div>
             
         </section>

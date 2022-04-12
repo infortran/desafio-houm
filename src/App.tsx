@@ -11,7 +11,9 @@ function App() {
 			<BrowserRouter>
 				<Routes>
 					<Route path="/" element={<Home />} />
-					<Route path="/search" element={<Search />} />
+					<Route path="/search-character" element={<Search />} />
+					<Route path="/search-location" element={<Search />} />
+					<Route path="/search-episode" element={<Search />} />
 				</Routes>
 			</BrowserRouter>
 		</Provider>

@@ -4,6 +4,7 @@ const paramsSlice = createSlice({
     name: 'params',
     initialState: {
         data: {
+            category:'',
             page: 1,
             query: ''
         }

@@ -15,24 +15,13 @@ interface charState {
     error: null | SerializedError
 }
 
-export const getAllCharacters = createAsyncThunk(
-    'characters/getCharacters',
-    async (page:number, {rejectWithValue}) => {
-        try{
-            const response = await axios.get<Character>('https://rickandmortyapi.com/api/character',{ params: { page }})
-            return response.data.results
-        }catch(err){
-            if(axios.isAxiosError(err)){
-                return rejectWithValue(err.response?.data)
-            }
-        }
-    }
-)
 export const getCharactersByName = createAsyncThunk(
     'characters/getCharactersByName',
     async (data: CharByName, {rejectWithValue}) => {
         const { page, name } = data
         try{
+            console.log('page character', page)
+            console.log('query character', name)
             const response = await axios.get<Character>('https://rickandmortyapi.com/api/character',{ params: { page , name }})
             return { results: response.data.results, pages: response.data.info.pages }
         }catch(err){
@@ -52,8 +41,8 @@ const initialState = {
     error: null
 } as charState
 
-const searchSlice = createSlice({
-    name:'search',
+const characterSlice = createSlice({
+    name:'characters',
     initialState,
     reducers:{},
     extraReducers:(builder) => {
@@ -83,4 +72,4 @@ const searchSlice = createSlice({
 })
 
 
-export default searchSlice.reducer
+export default characterSlice.reducer
