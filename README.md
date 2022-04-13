@@ -1,5 +1,5 @@
 
-# Desafio Houm 2022
+# Desafio Houm React Typescript
 
 Proyecto creado con React que consume la API de Rick y Morty
 
