@@ -48,7 +48,7 @@ const SearchBar = () => {
             <div className={styles.searchBar}>
                 <div className={styles.inputGroup}>
                     <input value={inputQuery} type="text" placeholder={`${category ? `Search a ${category}...` : `Search a Character, Episode or Location`} `} onChange={handleSearch} />
-                    <i className="fa fa-list"></i>
+                    {/*<i className="fa fa-list"></i>*/}
                 </div>
             </div>
             <div className={styles.tabNavigation}>
