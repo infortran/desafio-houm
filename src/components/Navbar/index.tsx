@@ -16,7 +16,7 @@ const Navbar = () => {
                 <HoumLogo />
             </div>
             <div className={styles.githubLink}>
-                <a href="/">Link to Github</a>
+                <a href="https://github.com/infortran/desafio-houm">Link to Github</a>
             </div>
         </nav>
     )
