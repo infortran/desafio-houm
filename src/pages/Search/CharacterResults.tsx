@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './results.module.css'
 import { Result } from '../../interfaces/Character'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -11,22 +11,24 @@ const CharacterResults = () => {
     const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.characters)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
     const { query, page } = data
-
+    const pageRef = useRef<number>(1)
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if(data.page === 1){
+        pageRef.current = page
+    },[page])
+
+    useEffect(() => {
+        if(pageRef.current === 1){
             setList([])
         }
-        if(data.page > 1){
+        if(pageRef.current > 1){
             setList(prev => {
                 return [...prev, ...entities]
-                
             })
         }else{
             setList(entities)
         }
-        // eslint-disable-next-line
     }, [entities])
 
     const handleNextPage = () => {

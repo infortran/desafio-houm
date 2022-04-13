@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './results.module.css'
 import { Result } from '../../interfaces/Location'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -10,14 +10,19 @@ const LocationResults = () => {
     const [list, setList] = useState<Result[]>([])
     const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.locations)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
+    const { query, page } = data
+    const pageRef = useRef(1)
 
     const dispatch = useDispatch()
+    useEffect(() => {
+        pageRef.current = page
+    }, [page])
 
     useEffect(() => {
-        if(data.page === 1){
+        if(pageRef.current === 1){
             setList([])
         }
-        if(data.page > 1){
+        if(pageRef.current > 1){
             setList(prev => {
                 return [...prev, ...entities]
             })
@@ -28,7 +33,7 @@ const LocationResults = () => {
 
     const handleNextPage = () => {
         let newPage = data.page + 1
-        dispatch(getLocationsByName({name: data.query, page:newPage}))
+        dispatch(getLocationsByName({name: query, page:newPage}))
         dispatch(setParams({category: 'Location', page:newPage}))
     }
 

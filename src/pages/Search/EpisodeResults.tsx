@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import styles from './results.module.css'
 import { Result } from '../../interfaces/Episode'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -10,26 +10,30 @@ const EpisodeResults = () => {
     const [list, setList] = useState<Result[]>([])
     const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.episodes)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
+    const { query, page } = data
+    const pageRef = useRef(1)
 
     const dispatch = useDispatch()
+    useEffect(() => {
+        pageRef.current = page
+    }, [page])
 
     useEffect(() => {
-        if(data.page === 1){
+        if(pageRef.current === 1){
             setList([])
         }
-        if(data.page > 1){
+        if(pageRef.current > 1){
             setList(prev => {
                 return [...prev, ...entities]
             })
         }else{
             setList(entities)
         }
-        // eslint-disable-next-line
     }, [entities])
 
     const handleNextPage = () => {
-        let newPage = data.page + 1
-        dispatch(getEpisodesByName({name: data.query, page:newPage}))
+        let newPage = page + 1
+        dispatch(getEpisodesByName({name: query, page:newPage}))
         dispatch(setParams({category:'Episode', page:newPage}))
     }
 
@@ -58,7 +62,7 @@ const EpisodeResults = () => {
                     ))
                 }
             </section>
-            <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
+            <div className={`${styles.btnNextContainer} ${page >= pages ? styles.btnNextDisabled : ''}`}>
                 <button className="btn-primary"
                     onClick={handleNextPage}
                 >Cargar mas</button>
