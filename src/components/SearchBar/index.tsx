@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import styles from './styles.module.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
@@ -11,35 +11,36 @@ const SearchBar = () => {
     const navigate = useNavigate()
     const { pathname } = useLocation()
     const [inputQuery, setInputQuery] = useState('')
-    const [initPage, setInitPage] = useState(1)
-    const [initCategory, setInitCategory] = useState('')
+    const categoryRef = useRef()
     const { data } = useSelector((state:RootStateOrAny) => state.params)
     const { query, page, category } = data
     const placeholder = ['Character', 'Episode', 'Location']
     const dispatch = useDispatch()
 
-    useEffect(()=> {
+    const dispatcher = useCallback(()=> {
         query && setInputQuery(query)
-        page && setInitPage(page)
+        if(category) categoryRef.current = category
         if(pathname === '/search-character'){
-            console.log('input query del params en search', inputQuery, page)
             dispatch(setParams({category:'Character', query, page}))
             dispatch(getCharactersByName({page, name:inputQuery}))
         }
         if(pathname === '/search-episode'){
-            dispatch(setParams({category:'Episode', query:inputQuery, page: initPage}))
+            dispatch(setParams({category:'Episode', query:inputQuery, page}))
             dispatch(getEpisodesByName({page, name:inputQuery}))
         }
         if(pathname === '/search-location'){
-            dispatch(setParams({category:'Location', query:inputQuery, page: initPage}))
+            dispatch(setParams({category:'Location', query:inputQuery, page}))
             dispatch(getLocationsByName({page, name:inputQuery}))
         }
-    }, [query, pathname, inputQuery, category])
+    }, [query, pathname, inputQuery, dispatch, category, page])
+
+    useEffect(()=>{
+        dispatcher()
+    },[dispatcher])
     
     const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setInputQuery(e.currentTarget.value)
         dispatch(setParams({query:e.currentTarget.value, page: 1}))
-        console.log('data del handle search', data)
     }
 
     return (
@@ -53,21 +54,22 @@ const SearchBar = () => {
             <div className={styles.tabNavigation}>
                 {
                     placeholder.map((tab, i) => (
-                        <div key={`${tab}-${i}`} className={`${styles.tabLink} ${category === tab && styles.tabActive}`}
+                        <div key={`${tab}-${i}`} className={`${styles.tabLink} ${categoryRef.current === tab && styles.tabActive}`}
                             onClick={(e) => {
                                 if(category !== tab){
                                     const val = e.currentTarget.innerHTML
                                     if(val === 'Character'){
-                                        console.log('input query en boton categoria', inputQuery)
-                                        dispatch(getCharactersByName({page, name:inputQuery}))
+                                        dispatch(getCharactersByName({page: 1, name:inputQuery}))
                                         dispatch(setParams({category:'Character', page: 1, query:inputQuery}))
                                         navigate('/search-character')
                                     }
                                     if(val === 'Episode'){
+                                        dispatch(getEpisodesByName({page: 1, name:inputQuery}))
                                         dispatch(setParams({category:'Episode', page: 1, query:inputQuery}))
                                         navigate('/search-episode')
                                     }
                                     if(val === 'Location'){
+                                        dispatch(getLocationsByName({page: 1, name:inputQuery}))
                                         dispatch(setParams({category:'Location', page: 1, query:inputQuery}))
                                         navigate('/search-location')
                                     }

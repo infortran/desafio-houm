@@ -4,10 +4,11 @@ import { Result } from '../../interfaces/Location'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import { getLocationsByName } from '../../store/Slices/locationSlice'
 import { setParams } from '../../store/Slices/paramsSlice'
+import NotFound from './NotFound'
 
 const LocationResults = () => {
     const [list, setList] = useState<Result[]>([])
-    const { entities, pages } = useSelector((state: RootStateOrAny) => state.locations)
+    const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.locations)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
 
     const dispatch = useDispatch()
@@ -33,6 +34,9 @@ const LocationResults = () => {
 
     return (
         <>
+        {
+            !error ?
+            <>
             <section className={styles.resultsContainer}>
                 {
                     list.map((e: Result, i) => (
@@ -59,6 +63,10 @@ const LocationResults = () => {
                     onClick={handleNextPage}
                 >Cargar mas</button>
             </div>
+            </>
+            :
+            <NotFound />
+        }   
         </>
 
     )

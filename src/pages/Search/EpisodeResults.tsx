@@ -4,10 +4,11 @@ import { Result } from '../../interfaces/Episode'
 import { RootStateOrAny, useDispatch, useSelector } from 'react-redux'
 import { getEpisodesByName } from '../../store/Slices/episodeSlice'
 import { setParams } from '../../store/Slices/paramsSlice'
+import NotFound from './NotFound'
 
 const EpisodeResults = () => {
     const [list, setList] = useState<Result[]>([])
-    const { entities, pages } = useSelector((state: RootStateOrAny) => state.episodes)
+    const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.episodes)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
 
     const dispatch = useDispatch()
@@ -23,6 +24,7 @@ const EpisodeResults = () => {
         }else{
             setList(entities)
         }
+        // eslint-disable-next-line
     }, [entities])
 
     const handleNextPage = () => {
@@ -33,6 +35,9 @@ const EpisodeResults = () => {
 
     return (
         <>
+        {
+            !error ?
+            <>
             <section className={styles.resultsContainer}>
                 {
                     list.map((e: Result, i) => (
@@ -58,6 +63,10 @@ const EpisodeResults = () => {
                     onClick={handleNextPage}
                 >Cargar mas</button>
             </div>
+            </>
+            :
+            <NotFound/>
+        }
         </>
 
     )

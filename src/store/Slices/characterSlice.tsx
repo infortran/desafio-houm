@@ -20,8 +20,6 @@ export const getCharactersByName = createAsyncThunk(
     async (data: CharByName, {rejectWithValue}) => {
         const { page, name } = data
         try{
-            console.log('page character', page)
-            console.log('query character', name)
             const response = await axios.get<Character>('https://rickandmortyapi.com/api/character',{ params: { page , name }})
             return { results: response.data.results, pages: response.data.info.pages }
         }catch(err){
@@ -59,6 +57,7 @@ const characterSlice = createSlice({
                 state.entities = action.payload?.results
                 state.pages = action.payload?.pages
                 state.currentReqId = undefined
+                state.error = null
             }
         })
         .addCase(getCharactersByName.rejected, (state, action) => {

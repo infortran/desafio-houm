@@ -12,7 +12,7 @@ const Home = () => {
             <main className="main">
                 <Page />
                 <div className="main-background">
-                    <img src={require('../../assets/images/background-rm.webp')}/>
+                    <img alt="bg-rick-morty" src={require('../../assets/images/background-rm.webp')}/>
                 </div>
             </main>
             <Footer />

@@ -57,6 +57,7 @@ const locationSlice = createSlice({
                 state.loading = 'idle'
                 state.entities = action.payload?.results
                 state.pages = action.payload?.pages
+                state.error = null
                 state.currentReqId = undefined
             }
         })

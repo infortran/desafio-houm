@@ -57,6 +57,7 @@ const episodeSlice = createSlice({
                 state.entities = action.payload?.results
                 state.pages = action.payload?.pages
                 state.currentReqId = undefined
+                state.error = null
             }
         })
         .addCase(getEpisodesByName.rejected, (state, action) => {
