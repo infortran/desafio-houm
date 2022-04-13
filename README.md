@@ -22,7 +22,7 @@ Para instalar, debe clonar este proyecto en un directorio vacio
 ```
     
 ## 🔗 Link del deploy
-[Desafio Houm](https://katherinempeterson.com/)
+[Desafio Houm](https://desafio-houm.herokuapp.com/)
 
 ## Tech Stack
 
