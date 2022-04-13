@@ -9,7 +9,7 @@ import NotFound from './NotFound'
 const LocationResults = () => {
     const [list, setList] = useState<Result[]>([])
     const [colors, setColors] = useState<string[]>([])
-    const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.locations)
+    const { entities, pages, error, loading } = useSelector((state: RootStateOrAny) => state.locations)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
     const { query, page } = data
     const pageRef = useRef(1)
@@ -20,27 +20,27 @@ const LocationResults = () => {
     }, [page])
 
     useEffect(() => {
-        if(pageRef.current === 1){
+        if (pageRef.current === 1) {
             setList([])
         }
-        if(pageRef.current > 1){
+        if (pageRef.current > 1) {
             setList(prev => {
                 return [...prev, ...entities]
             })
-        }else{
+        } else {
             setList(entities)
         }
     }, [entities])
 
     const handleNextPage = () => {
         let newPage = data.page + 1
-        dispatch(getLocationsByName({name: query, page:newPage}))
-        dispatch(setParams({category: 'Location', page:newPage}))
+        dispatch(getLocationsByName({ name: query, page: newPage }))
+        dispatch(setParams({ category: 'Location', page: newPage }))
     }
     const handleColor = useCallback(() => {
         let colorsArr: string[] = []
-        for (let i = 0; i < pages * 25; i++){
-            let color = `#${Math.floor(Math.random()*16777215).toString(16)}`
+        for (let i = 0; i < pages * 25; i++) {
+            let color = `#${Math.floor(Math.random() * 16777215).toString(16)}`
             colorsArr.push(color)
         }
         setColors(colorsArr)
@@ -49,47 +49,61 @@ const LocationResults = () => {
     useEffect(() => {
         handleColor()
     }, [handleColor])
-    
+
     return (
         <>
-        {
-            !error ?
-            <>
-            <section className={`${styles.resultsContainer} ${styles.resultsContainerLoc}`}>
-                {
-                    list.map((e: Result, i) => (
-                        <article key={`${e.name}-${i}`} className={styles.heroCardEp}>
-                            <header className={styles.cardHeader}>
-                                
-                                <div className={`${styles.randomImg}`} style={{
-                                    background:colors[i], 
-                                    color:'white'}}>
-
-                                    <div className={styles.dimension}>{e.dimension}</div>
-                                    <i className="fa fa-earth-americas"></i>
-                                    <div>{e.residents.length}</div>
-                                </div>
-                            </header>
-                            <section className={styles.cardBody}>
-                                <div>
-                                    <h3 className={styles.episodeH3}>{e.name}</h3>
-                                <p>{e.type}</p>
-                                </div>
-
-                            </section>
-                        </article>
-                    ))
-                }
-            </section>
-            <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
-                <button className="btn-primary"
-                    onClick={handleNextPage}
-                >Cargar mas</button>
-            </div>
-            </>
-            :
-            <NotFound />
-        }   
+            {
+                !error ?
+                    <>
+                        <section className={`${styles.resultsContainer} ${styles.resultsContainerLoc}`}>
+                            {
+                                loading === 'pending' ?
+                                    <div className="loading-container">
+                                        <div className="loading"></div>
+                                    </div>
+                                    :
+                                    ''
+                            }
+                            {
+                                list.map((e: Result, i) => (
+                                    <article key={`${e.name}-${i}`} className={styles.heroCardEp}>
+                                        <header className={styles.cardHeader}>
+                                            <div className={`${styles.randomImg}`} style={{
+                                                background: colors[i],
+                                                color: 'white'
+                                            }}>
+                                                <div className={styles.dimension}>{e.dimension}</div>
+                                                <i className="fa fa-earth-americas"></i>
+                                                <div>{e.residents.length}</div>
+                                            </div>
+                                        </header>
+                                        <section className={styles.cardBody}>
+                                            <div>
+                                                <h3 className={styles.episodeH3}>{e.name}</h3>
+                                                <p>{e.type}</p>
+                                            </div>
+                                        </section>
+                                    </article>
+                                ))
+                            }
+                        </section>
+                        <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
+                            <button className="btn-primary"
+                                onClick={handleNextPage}
+                            >
+                                {
+                                    loading === 'pending'
+                                        ?
+                                        <i className="fa fa-spin fa-spinner"></i>
+                                        :
+                                        <p>Cargar mas</p>
+                                }
+                            </button>
+                        </div>
+                    </>
+                    :
+                    <NotFound />
+            }
         </>
 
     )

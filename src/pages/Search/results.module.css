@@ -2,9 +2,10 @@
     display:grid;
     grid-template-columns: 1fr 1fr;
     grid-gap:8px;
+    position:relative;
 }
 
-.resultsContainer{
+.resultsContainerLoc{
     grid-template-columns: 1fr;
 }
 

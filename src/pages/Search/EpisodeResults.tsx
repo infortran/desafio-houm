@@ -8,7 +8,7 @@ import NotFound from './NotFound'
 
 const EpisodeResults = () => {
     const [list, setList] = useState<Result[]>([])
-    const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.episodes)
+    const { entities, pages, error, loading } = useSelector((state: RootStateOrAny) => state.episodes)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
     const { query, page } = data
     const pageRef = useRef(1)
@@ -19,22 +19,22 @@ const EpisodeResults = () => {
     }, [page])
 
     useEffect(() => {
-        if(pageRef.current === 1){
+        if (pageRef.current === 1) {
             setList([])
         }
-        if(pageRef.current > 1){
+        if (pageRef.current > 1) {
             setList(prev => {
                 return [...prev, ...entities]
             })
-        }else{
+        } else {
             setList(entities)
         }
     }, [entities])
 
     const handleNextPage = () => {
         let newPage = page + 1
-        dispatch(getEpisodesByName({name: query, page:newPage}))
-        dispatch(setParams({category:'Episode', page:newPage}))
+        dispatch(getEpisodesByName({ name: query, page: newPage }))
+        dispatch(setParams({ category: 'Episode', page: newPage }))
     }
 
     const handleColor = (e: string) => {
@@ -42,54 +42,69 @@ const EpisodeResults = () => {
         console.log(season)
         switch (season) {
             case 'S01': return styles.season1;
-            
+
             case 'S02': return styles.season2;
-            
+
             case 'S03': return styles.season3;
-            
+
             case 'S04': return styles.season4;
-            
+
             case 'S05': return styles.season5;
-            
+
             default: return styles.season1;
         }
     }
 
     return (
         <>
-        {
-            !error ?
-            <>
-            <section className={`${styles.resultsContainer} ${styles.resultsContainerLoc}`}>
-                {
-                    list.map((e: Result, i) => (
-                        <article key={`${e.name}-${i}`} className={styles.heroCardEp}>
-                            <header className={styles.cardHeader}>
-                                <div className={`${styles.randomImg} ${handleColor(e.episode)}`}>
-                                    <p>{e.episode}</p>
-                    
-                                </div>
-                            </header>
-                            <section className={styles.cardBody}>
-                                <div>
-                                    <h3 className={styles.episodeH3}>{e.name}</h3>
-                                    <p>issued on: {e.air_date}</p>
-                                </div>
-
-                            </section>
-                        </article>
-                    ))
-                }
-            </section>
-            <div className={`${styles.btnNextContainer} ${page >= pages ? styles.btnNextDisabled : ''}`}>
-                <button className="btn-primary"
-                    onClick={handleNextPage}
-                >Cargar mas</button>
-            </div>
-            </>
-            :
-            <NotFound/>
-        }
+            {
+                !error ?
+                    <>
+                        <section className={`${styles.resultsContainer} ${styles.resultsContainerLoc}`}>
+                            {
+                                loading === 'pending'
+                                    ?
+                                    <div className="loading-container">
+                                        <div className="loading"></div>
+                                    </div>
+                                    :
+                                    ''
+                            }
+                            {
+                                list.map((e: Result, i) => (
+                                    <article key={`${e.name}-${i}`} className={styles.heroCardEp}>
+                                        <header className={styles.cardHeader}>
+                                            <div className={`${styles.randomImg} ${handleColor(e.episode)}`}>
+                                                <p>{e.episode}</p>
+                                            </div>
+                                        </header>
+                                        <section className={styles.cardBody}>
+                                            <div>
+                                                <h3 className={styles.episodeH3}>{e.name}</h3>
+                                                <p>air date: {e.air_date}</p>
+                                            </div>
+                                        </section>
+                                    </article>
+                                ))
+                            }
+                        </section>
+                        <div className={`${styles.btnNextContainer} ${page >= pages ? styles.btnNextDisabled : ''}`}>
+                            <button className="btn-primary"
+                                onClick={handleNextPage}
+                            >
+                                {
+                                    loading === 'pending'
+                                        ?
+                                        <i className="fa fa-spin fa-spinner"></i>
+                                        :
+                                        <p>Cargar mas</p>
+                                }
+                            </button>
+                        </div>
+                    </>
+                    :
+                    <NotFound />
+            }
         </>
 
     )
