@@ -9,9 +9,13 @@
 .logoContainer{
     text-align:center;
     cursor:pointer;
+    display:flex;
+    align-items: center;
 }
 .logoContainer p{
-    font-size:12px
+    font-size:16px;
+    padding-left:10px;
+    color:var(--text-light);
 }
 
 .githubLink a{

@@ -37,24 +37,43 @@ const EpisodeResults = () => {
         dispatch(setParams({category:'Episode', page:newPage}))
     }
 
+    const handleColor = (e: string) => {
+        const season = e.substr(0, 3)
+        console.log(season)
+        switch (season) {
+            case 'S01': return styles.season1;
+            
+            case 'S02': return styles.season2;
+            
+            case 'S03': return styles.season3;
+            
+            case 'S04': return styles.season4;
+            
+            case 'S05': return styles.season5;
+            
+            default: return styles.season1;
+        }
+    }
+
     return (
         <>
         {
             !error ?
             <>
-            <section className={styles.resultsContainer}>
+            <section className={`${styles.resultsContainer} ${styles.resultsContainerLoc}`}>
                 {
                     list.map((e: Result, i) => (
-                        <article key={`${e.name}-${i}`} className={styles.heroCard}>
+                        <article key={`${e.name}-${i}`} className={styles.heroCardEp}>
                             <header className={styles.cardHeader}>
-                                
-                                <div className={`${styles.badge}`}>
-                                    
+                                <div className={`${styles.randomImg} ${handleColor(e.episode)}`}>
+                                    <p>{e.episode}</p>
+                    
                                 </div>
                             </header>
                             <section className={styles.cardBody}>
                                 <div>
-                                    <h3>{e.name}</h3>
+                                    <h3 className={styles.episodeH3}>{e.name}</h3>
+                                    <p>issued on: {e.air_date}</p>
                                 </div>
 
                             </section>

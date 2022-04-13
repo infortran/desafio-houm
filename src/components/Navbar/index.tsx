@@ -12,8 +12,8 @@ const Navbar = () => {
                     navigate('/')
                 }}
             >
-                <p>Desafío</p>
                 <HoumLogo />
+                <p>Challenge</p>
             </div>
             <div className={styles.githubLink}>
                 <a href="https://github.com/infortran/desafio-houm">Link to Github</a>

@@ -11,64 +11,85 @@ const CharacterResults = () => {
     const { entities, pages, error } = useSelector((state: RootStateOrAny) => state.characters)
     const { data } = useSelector((state: RootStateOrAny) => state.params)
     const { query, page } = data
-    const pageRef = useRef<number>(1)
+    const pageRef = useRef(1)
     const dispatch = useDispatch()
 
     useEffect(() => {
         pageRef.current = page
-    },[page])
+    }, [page])
 
     useEffect(() => {
-        if(pageRef.current === 1){
+        if (pageRef.current === 1) {
             setList([])
         }
-        if(pageRef.current > 1){
+        if (pageRef.current > 1) {
             setList(prev => {
                 return [...prev, ...entities]
             })
-        }else{
+        } else {
             setList(entities)
         }
     }, [entities])
 
     const handleNextPage = () => {
         let newPage = page + 1
-        dispatch(getCharactersByName({name: query, page:newPage}))
-        dispatch(setParams({category: 'Character', query, page:newPage}))
+        dispatch(getCharactersByName({ name: query, page: newPage }))
+        dispatch(setParams({ category: 'Character', query, page: newPage }))
     }
 
     return (
         <>{
             !error ?
-            <><section className={styles.resultsContainer}>
-                {
-                    list.map((e: Result, i) => (
-                        <article key={`${i}`} className={styles.heroCard}>
-                            <header className={styles.cardHeader}>
-                                <img src={e.image} alt="" />
-                                <div className={`${styles.badge}`}>
-                                    <span className={`${styles[e.status]}`}>{e.status}</span>
-                                </div>
-                            </header>
-                            <section className={styles.cardBody}>
-                                <div>
-                                    <h3>{e.name}</h3>
-                                    <p>{e.species}</p>
-                                </div>
+                <><section className={styles.resultsContainer}>
+                    {
+                        list.map((e: Result, i) => (
+                            <article key={`${i}`} className={styles.heroCard}>
+                                <header className={styles.cardHeader}>
+                                    <img src={e.image} alt={e.name} title={e.name} />
+                                    <div className={`${styles.badge}`}>
+                                        <span className={`${styles[e.status]}`}>{e.status}</span>
+                                    </div>
+                                </header>
+                                <section className={styles.cardBody}>
+                                    <div>
+                                        <h3>{e.name}</h3>
+                                        <p>{e.species}</p>
+                                    </div>
 
-                            </section>
-                        </article>
-                    ))
-                }
-            </section>
-            <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
-                <button className="btn-primary"
-                    onClick={handleNextPage}
-                >Cargar mas</button>
-            </div></> 
-            :
-            <NotFound />
-            }
+                                </section>
+
+                                <footer className={styles.cardFooter}>
+                                    <hr />
+                                    <div className={styles.cardFooterContainer}>
+                                        <div>
+                                            <i className="fa fa-earth-americas"></i>
+                        <p>{e.origin.name}</p>
+                                        </div>
+                                        <div>
+                                            {
+                                                e.gender === 'Female' 
+                                                ? 
+                                                <i className="fa fa-venus"></i>
+                                                :
+                                                <i className="fa fa-mars"></i>
+                                            }
+                                            
+                                        </div>
+                                    </div>
+
+                                </footer>
+                            </article>
+                        ))
+                    }
+                </section>
+                    <div className={`${styles.btnNextContainer} ${data.page >= pages ? styles.btnNextDisabled : ''}`}>
+                        <button className="btn-primary"
+                            onClick={handleNextPage}
+                        >Cargar mas</button>
+                    </div></>
+                :
+                <NotFound />
+        }
         </>
 
     )
